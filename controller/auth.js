@@ -11,10 +11,9 @@ const transporter = require("../utils/nodemailer/nodeMail");
 const randomString = require("../utils/random");
 
 exports.signup = async (req, res, next) => {
-    const error = validationResult(req);
-
+    const error = validationResult(req)
     if (!error.isEmpty()) {
-        next(createError.Forbidden(error.array()[0].msg));
+       return next(createError.Forbidden(error.array()[0].msg));
     }
 
     const email = req.body.email;
@@ -26,7 +25,8 @@ exports.signup = async (req, res, next) => {
     const address = req.body.address;
 
     transporter.sendMail(mail.verifyEmail(email, random), (error, info) => {
-        if (error) next(createError.InternalServerError("Mail Not Send"));
+        if (error)
+            return next(createError.InternalServerError("Mail Not Send"));
     });
 
     const hash = await bcrypt.hash(password, 12);
@@ -65,17 +65,17 @@ exports.login = async (req, res, next) => {
     const password = req.body.password;
 
     const user = await User.findOne({ email: email });
-    if (!user) next(createError.NotFound("User not found"));
+    if (!user) return next(createError.NotFound("User not found"));
 
     const passwordHash = await bcrypt.compare(password, user.password);
-    if (!passwordHash) next(createError.Unauthorized("Wrong password"));
+    if (!passwordHash) return next(createError.Unauthorized("Wrong password"));
 
     const token = await jwt.sign(
         { id: user._id, email: user.email },
         "newSecretKey"
         // { expiresIn: "2h" }
     );
-    if (!token) next(createError.BadRequest());
+    if (!token) return next(createError.BadRequest());
 
     res.status(200).json({
         userName: user.name,
@@ -92,7 +92,7 @@ exports.editProfile = async (req, res, next) => {
 
 exports.updateProfile = async (req, res, next) => {
     const error = validationResult(req);
-    if (!error.isEmpty()) next(createError.Forbidden());
+    if (!error.isEmpty()) return next(createError.Forbidden());
 
     const name = req.body.name;
     const password = req.body.password;

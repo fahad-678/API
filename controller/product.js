@@ -18,7 +18,7 @@ exports.getProducts = async (req, res, next) => {
     const totalPages = await Product.find().countDocuments();
 
     if (!products || !totalPages)
-        next(createError.InternalServerError("Cannot reach Database"));
+        return next(createError.InternalServerError("Cannot reach Database"));
 
     res.status(200).json({
         message: "Products Fetched",
@@ -34,7 +34,7 @@ exports.getDetails = async (req, res, next) => {
     const product = await Product.findById(prodId);
 
     if (!product)
-        next(createError.InternalServerError("Cannot reach Database"));
+        return next(createError.InternalServerError("Cannot reach Database"));
 
     res.status(200).json(product);
 };
@@ -43,7 +43,8 @@ exports.getDetails = async (req, res, next) => {
 
 exports.addProduct = async (req, res, next) => {
     const error = validationResult(req);
-    if (!error.isEmpty()) new (createError.Forbidden())();
+    if (!error.isEmpty())
+        return next(createError.Forbidden(error.array()[0].msg))();
 
     const title = req.body.title;
     const image = req.files["image"].map((f) => f.path);
@@ -52,8 +53,7 @@ exports.addProduct = async (req, res, next) => {
     const description = req.body.description;
     const quantity = req.body.quantity;
 
-
-    if (!req.files) next(createError.UnsupportedMediaType("Invalid File Type"));
+    if (!req.files) return next(createError.UnsupportedMediaType("Invalid File Type"));
 
     const product = new Product({
         title: title,
@@ -87,7 +87,7 @@ exports.getEditProduct = async (req, res, next) => {
 
 exports.editProduct = async (req, res, next) => {
     const error = validationResult(req);
-    if (!error.isEmpty()) next(createError.Forbidden());
+    if (!error.isEmpty()) return next(createError.Forbidden(error.array()[0].msg));
 
     const prodId = req.query.prodId;
     const title = req.body.title;

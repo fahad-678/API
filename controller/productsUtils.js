@@ -39,7 +39,7 @@ exports.reviews = async (req, res, next) => {
     const stars = req.body.stars;
     const image = req.files["image"].map((f) => f.path);
 
-    if(!image) next(createError.InternalServerError("Invalid Image"))
+    if(!image) return next(createError.InternalServerError("Invalid Image"))
 
     const product = await Product.findById(prodId);
     const user = await User.findById(req.userId);

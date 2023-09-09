@@ -1,4 +1,5 @@
 const express = require("express");
+require("dotenv").config();
 
 const shopRoutes = require("./routes/shop");
 const productRoutes = require("./routes/product");
@@ -30,8 +31,8 @@ shop.use(errorHandler.routes);
 shop.use(errorHandler.error);
 
 mongoose
-    .connect("mongodb+srv://testing:test@cluster0.5z60ejk.mongodb.net/SHOP")
+    .connect(`mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.5z60ejk.mongodb.net/${process.env.MONGODB_DATABASE_NAME}`)
     .then(() => {
-        shop.listen(3000);
+        shop.listen(process.env.PORT);
         console.log("Connected");
     });
