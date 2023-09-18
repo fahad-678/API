@@ -11,11 +11,10 @@ const transporter = require("../utils/nodemailer/nodeMail");
 const randomString = require("../utils/random");
 
 exports.signup = async (req, res, next) => {
-    const error = validationResult(req)
+    const error = validationResult(req);
     if (!error.isEmpty()) {
-       return next(createError.Forbidden(error.array()[0].msg));
+        return next(createError.Forbidden(error.array()[0].msg));
     }
-
     const email = req.body.email;
     const password = req.body.password;
     const random = randomString;
@@ -24,10 +23,10 @@ exports.signup = async (req, res, next) => {
     const phNumber = req.body.phNumber;
     const address = req.body.address;
 
-    transporter.sendMail(mail.verifyEmail(email, random), (error, info) => {
-        if (error)
-            return next(createError.InternalServerError("Mail Not Send"));
-    });
+    // await transporter.sendMail(mail.verifyEmail(email, random), (error, info) => {
+    //     if (error)
+    //         return next(createError.InternalServerError("Mail Not Send"));
+    // });
 
     const hash = await bcrypt.hash(password, 12);
 
@@ -81,6 +80,7 @@ exports.login = async (req, res, next) => {
         userName: user.name,
         userEmail: user.email,
         token: token,
+        status: "success",
     });
 };
 

@@ -12,15 +12,15 @@ const validator = require("../utils/validation");
 const multerHandler = multer({ storage: destHandler.diskStorage });
 const multerFields = multerHandler.single("profileImage");
 
-router.get(
+router.post(
     "/signup",
     multerFields,
     validator.emailValidator,
     validator.loginValidator,
     authController.signup
 );
-router.post("/signup", authController.verifyEmail);
-router.get("/login", authController.login);
+router.put("/signup", authController.verifyEmail);
+router.post("/login", authController.login);
 router.post("/profile", Auth, authController.editProfile);
 router.put(
     "/profile",
