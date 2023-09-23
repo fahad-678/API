@@ -7,7 +7,6 @@ exports.saveImage = async (image) => {
     const imagePath = [];
     image.forEach((img) =>
         imagePath.push({
-            _id: new mongoose.Types.ObjectId(),
             path: img,
         })
     );
@@ -15,7 +14,6 @@ exports.saveImage = async (image) => {
 };
 
 exports.unlinkImage = async (imgPath) => {
-    console.log(imgPath)
     imgPath.forEach((img) => unlink(img.path));
 };
 

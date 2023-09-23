@@ -9,6 +9,7 @@ const utilRoutes = require("./routes/util");
 
 const errorHandler = require("./error/error");
 const authorization = require("./utils/authorization");
+const path = require("path");
 const Path = require("./utils/path");
 
 const mongoose = require("mongoose");
@@ -21,13 +22,14 @@ shop.use(authorization);
 
 shop.use(bodyParser.json());
 shop.use(cors());
-shop.use(Path.imagePath);
+shop.use("/images", express.static(path.join(__dirname, "images")));
+// shop.use(Path.imagePath);
 
-shop.use(shopRoutes);
 shop.use(productRoutes);
 shop.use(authRoutes);
 shop.use(cartRoutes);
 shop.use(utilRoutes);
+shop.use(shopRoutes);
 
 shop.use(errorHandler.routes);
 shop.use(errorHandler.error);

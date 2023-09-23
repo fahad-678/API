@@ -15,7 +15,7 @@ const multerFields = multerHandler.fields([
 
 const router = express.Router();
 
-router.get(
+router.post(
     "/Product",
     Auth,
     multerFields,
@@ -23,7 +23,9 @@ router.get(
     productController.addProduct
 );
 
-router.post("/Product:prodId", Auth, productController.getEditProduct);
+router.get("/Product", Auth, productController.getAdminProducts);
+
+router.post("/Product/:prodId", Auth, productController.getEditProduct);
 router.put(
     "/Product",
     Auth,
@@ -32,6 +34,6 @@ router.put(
     productController.editProduct
 );
 
-router.delete("/Product:prodId", Auth, productController.deleteProduct);
+router.delete("/Product/:prodId", Auth, productController.deleteProduct);
 
 module.exports = router;

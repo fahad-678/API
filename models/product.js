@@ -9,7 +9,6 @@ const productSchema = new Schema({
     },
     imgPath: [
         {
-            _id: Schema.Types.ObjectId,
             path: {
                 type: String,
                 required: true,
@@ -18,7 +17,6 @@ const productSchema = new Schema({
     ],
     previewImage: [
         {
-            _id: Schema.Types.ObjectId,
             path: {
                 type: String,
                 required: true,
